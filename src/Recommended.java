@@ -22,9 +22,12 @@ public class Recommended extends JFrame {
     private JButton viewerBeware;
     public String[] columnNames;
     public DefaultTableModel model;
+    private Connection conn;
 
     public Recommended() {
         super();
+//        this.conn = conn;
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(recommendedPanel);
         this.pack();

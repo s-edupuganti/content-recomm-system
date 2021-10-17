@@ -99,6 +99,11 @@ public class ViewerBeware extends JFrame {
 
             System.out.println("CHECK 2!");
 
+
+
+
+
+
             String avoidUser = "";
             int greatDislikeSim = 0;
 
@@ -161,9 +166,6 @@ public class ViewerBeware extends JFrame {
                             "(SELECT title_id " +
                                 "FROM customer_ratings " +
                                 "WHERE customer_id = '" + Login.userInfoInt + "' " +
-                                "AND rating < 3  INTERSECT SELECT title_id " +
-                                "FROM customer_ratings " +
-                                "WHERE customer_id = '" + avoidUser + "' " +
                                 "AND rating < 3);"
             );
 
