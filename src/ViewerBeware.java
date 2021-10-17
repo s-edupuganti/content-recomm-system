@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.lang.Math;
 import java.util.List;
 
 public class ViewerBeware extends JFrame {
@@ -99,6 +100,36 @@ public class ViewerBeware extends JFrame {
 
             System.out.println("CHECK 2!");
 
+            String countWatchHistory = (
+                    "SELECT COUNT(title_id) AS number FROM customer_ratings WHERE customer_id = '" + Login.userInfoInt + "' AND rating < 3;"
+                    );
+
+            System.out.println(countWatchHistory);
+
+            System.out.println("HELLO 1!");
+
+            ResultSet watchHist = stmt.executeQuery(countWatchHistory);
+
+            System.out.println("HELLO 2!");
+
+            int count = 0;
+
+            System.out.println("HELLO 3!");
+
+            while (watchHist.next()) {
+
+                String watchHistNum = watchHist.getString("number");
+                System.out.println(watchHistNum);
+                count = Integer.valueOf(watchHistNum);
+
+                System.out.println("HELLO 4!");
+
+
+            }
+
+            System.out.println("HELLO 5!");
+
+
 
 
 
@@ -107,9 +138,25 @@ public class ViewerBeware extends JFrame {
             String avoidUser = "";
             int greatDislikeSim = 0;
 
+            int countDbl = 0;
+
             for (int i = 0; i < list.size(); i++) {
 
-                    String sqlStatement2 = (
+
+                if (i == 0) {
+                    countDbl = (int) Math.floor(count / 1.5);
+                } else if (i == 20) {
+                    countDbl = (int) Math.floor(count / 2);
+                } else if (i == 50) {
+                    countDbl = (int) Math.floor(count / 2.5);
+                } else if (i == 100) {
+                    countDbl =  (int) Math.floor(count / 3);
+                }
+
+                System.out.println("THRESHOLD IS: " + countDbl);
+
+
+                String sqlStatement2 = (
                             "SELECT COUNT(title_id) AS num_similar " +
                                     "FROM (SELECT title_id " +
                                     "FROM customer_ratings " +
@@ -124,24 +171,23 @@ public class ViewerBeware extends JFrame {
 
                     ResultSet result2 = stmt.executeQuery((sqlStatement2));
 
+                    int dislikesCommonInt = 0;
+
                     while (result2.next()) {
 
                         System.out.println("CHECK 3!");
 
                         String dislikesCommon = result2.getString("num_similar");
-                        int dislikesCommonInt = Integer.parseInt(dislikesCommon);
+                        dislikesCommonInt = Integer.parseInt(dislikesCommon);
 
-                        System.out.println("CHECK 4!");
-
-
-                        if (dislikesCommonInt > greatDislikeSim) {
-                            greatDislikeSim = dislikesCommonInt;
-                            avoidUser = list.get(i);
-                        }
-
-                        System.out.println("CHECK 5!");
 
                     }
+
+                if (dislikesCommonInt >= countDbl) {
+                    greatDislikeSim = dislikesCommonInt;
+                    avoidUser = list.get(i);
+                    break;
+                }
 
 
 
