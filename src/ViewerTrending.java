@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -91,8 +90,6 @@ public class ViewerTrending extends JFrame {
                             "GROUP BY titles.title_id " +
                             "ORDER BY count(*) DESC LIMIT 10;"
             );
-
-            System.out.println(sqlStatement);
             //send statement to DBMS
             ResultSet result = stmt.executeQuery(sqlStatement);
 

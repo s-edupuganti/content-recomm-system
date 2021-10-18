@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -76,7 +75,6 @@ public class ViewerBeware extends JFrame {
                             "FROM customer_ratings;"
             );
 
-            System.out.println(sqlStatement);
             //send statement to DBMS
             ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -88,16 +86,10 @@ public class ViewerBeware extends JFrame {
 
                 String input = result.getString("customer_id");
                 if (!input.equals(Login.userInfo)) {
-                    System.out.println(input);
                     list.add(input);
                 }
 
-
-                System.out.println("CHECK!");
-
             }
-
-            System.out.println("CHECK 2!");
 
             String countWatchHistory = (
                     "SELECT COUNT(title_id) AS number FROM customer_ratings WHERE customer_id = '" + Login.userInfoInt + "' AND rating < 3;"
@@ -105,27 +97,16 @@ public class ViewerBeware extends JFrame {
 
             System.out.println(countWatchHistory);
 
-            System.out.println("HELLO 1!");
-
             ResultSet watchHist = stmt.executeQuery(countWatchHistory);
 
-            System.out.println("HELLO 2!");
-
             int count = 0;
-
-            System.out.println("HELLO 3!");
 
             while (watchHist.next()) {
 
                 String watchHistNum = watchHist.getString("number");
-                System.out.println(watchHistNum);
                 count = Integer.valueOf(watchHistNum);
 
-                System.out.println("HELLO 4!");
-
             }
-
-            System.out.println("HELLO 5!");
 
             String avoidUser = "";
             int greatDislikeSim = 0;
@@ -145,9 +126,6 @@ public class ViewerBeware extends JFrame {
                     countDbl =  (int) Math.floor(count / 3);
                 }
 
-                System.out.println("THRESHOLD IS: " + countDbl);
-
-
                 String sqlStatement2 = (
                             "SELECT COUNT(title_id) AS num_similar " +
                                     "FROM (SELECT title_id " +
@@ -159,15 +137,11 @@ public class ViewerBeware extends JFrame {
                                     "WHERE customer_id = '" + list.get(i) + "' AND rating < 3) I;"
                     );
 
-                    System.out.println(sqlStatement2);
-
                     ResultSet result2 = stmt.executeQuery((sqlStatement2));
 
                     int dislikesCommonInt = 0;
 
                     while (result2.next()) {
-
-                        System.out.println("CHECK 3!");
 
                         String dislikesCommon = result2.getString("num_similar");
                         dislikesCommonInt = Integer.parseInt(dislikesCommon);
@@ -183,8 +157,6 @@ public class ViewerBeware extends JFrame {
 
 
             }
-
-            System.out.println("CHECK 6!");
 
             System.out.println("Use with similar dislikes is " + avoidUser);
             System.out.println("This user has " + greatDislikeSim + " similarities!");
@@ -207,11 +179,6 @@ public class ViewerBeware extends JFrame {
 
             ResultSet result3 = stmt.executeQuery(sqlStatement3);
 
-            System.out.println(sqlStatement3);
-
-            System.out.println("CHECK 7!");
-
-
             while (result3.next()) {
 
 
@@ -221,13 +188,7 @@ public class ViewerBeware extends JFrame {
                 String avgRev = result3.getString("average_rating");
                 String runtime = result3.getString("runtime_minutes");
 
-                System.out.println("GETTING HERE 2!");
-
-                System.out.println("GETTING HERE 3!");
-
                 Object[] information = {titleName, year, genre, avgRev, runtime};
-
-                System.out.println("GETTING HERE 4!");
 
                 finalOutput.add(information);
 

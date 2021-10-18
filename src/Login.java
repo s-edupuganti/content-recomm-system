@@ -72,7 +72,6 @@ public class Login extends JFrame {
                         Statement stmt = conn.createStatement();
                         //create an SQL statement
                         String sqlStatement = "SELECT customer_id FROM customer_ratings WHERE customer_id = '" + userInfoInt + "' LIMIT 1;";
-                        System.out.println(sqlStatement);
                         //send statement to DBMS
                         ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -80,9 +79,7 @@ public class Login extends JFrame {
                         System.out.println("Database");
                         System.out.println("______________________________________");
 
-                        System.out.println(result.isBeforeFirst());
                         if (!result.isBeforeFirst()) {
-                            //System.out.println("ERROR: Incorrect User Login Info");
                             JOptionPane.showMessageDialog(Login.this,
                                     "ERROR: Incorrect User Login Info");
                         } else {

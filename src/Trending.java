@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.*;
 
 public class Trending extends JFrame {
     private JPanel trendingPanel;
     private JLabel titleLabel;
-    private JButton filterButton;
     private JButton backButton;
     private JScrollBar scrollBar1;
     private JTable myTable;
@@ -22,6 +22,17 @@ public class Trending extends JFrame {
     private JComboBox comboBox1;
     public DefaultTableModel model;
     public String[] columnNames;
+
+    public static boolean isValidDate(String inDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(inDate.trim());
+        } catch (ParseException pe) {
+            return false;
+        }
+        return true;
+    }
 
 
     public Trending() {
@@ -45,18 +56,22 @@ public class Trending extends JFrame {
                 String title = "";
                 String tomatoTitle1 = "";
                 String tomatoTitle2 = "";
+                String startDate = "";
+                String endDate = "";
 
                 dbSetup my = new dbSetup();
                 //Building the connection
                 Connection conn = null;
                 String s = (String) comboBox1.getSelectedItem();
                 if (s.equals("Hollywood Pairs")) {
-                    model.setColumnCount(1);
+                    model.setColumnCount(2);
                     model.setRowCount(0);
                     JTableHeader header = myTable.getTableHeader();
                     TableColumnModel colMod = header.getColumnModel();
                     TableColumn tabCol = colMod.getColumn(0);
-                    tabCol.setHeaderValue("Hollywood Pairs");
+                    TableColumn tabCol1 = colMod.getColumn(1);
+                    tabCol.setHeaderValue("Actor 1");
+                    tabCol1.setHeaderValue("Actor 2");
                     header.repaint();
 
 
@@ -77,34 +92,23 @@ public class Trending extends JFrame {
                     try {
                         //create a statement object
                         Statement stmt = conn.createStatement();
-
-                        // FIRST SQL QUERY
-                        String sqlStatement1 = (
-                                "SELECT title_id FROM titles WHERE average_rating IN" +
-                                        " (SELECT MAX(average_rating) FROM titles) LIMIT 1;"
-                        );
-
-                        System.out.println(sqlStatement1);
-                        //send statement to DBMS
-                        ResultSet result1 = stmt.executeQuery(sqlStatement1);
-
-                        //OUTPUT
-                        System.out.println("Database");
-                        System.out.println("______________________________________");
-
-                        while (result1.next()) {
-                            title = result1.getString("title_id");
-                        }
-                        System.out.println(title);
-
-                        // SECOND SQL QUERY
+//
                         //create an SQL statement
                         String sqlStatement = (
-                                "SELECT principals.title_id, string_agg(primary_name, ', ') AS hollywood_pairs FROM names INNER JOIN principals ON names.nmconst = " +
-                                        "principals.nmconst AND title_id='" + title +"' AND category LIKE '%act%' GROUP BY 1 LIMIT 2;"
+                                "SELECT primaryname1, primaryname2, avg(average_rating) as chemistry " +
+                                        "FROM (SELECT group1.nmconst as name1, group2.nmconst as name2, " +
+                                        "group1.title_id, titles.average_rating, group1.primary_name as primaryname1," +
+                                        " group2.primary_name as primaryname2 FROM (SELECT principals.nmconst as" +
+                                        " nmconst, title_id, primary_name FROM principals inner join names on " +
+                                        "principals.nmconst = names.nmconst WHERE category LIKE '%act%') as group1, " +
+                                        "(SELECT principals.nmconst as nmconst, title_id , primary_name FROM principals" +
+                                        " inner join names on principals.nmconst = names.nmconst WHERE category LIKE " +
+                                        "'%act%') as group2 inner join titles on" +
+                                        " group2.title_id=titles.title_id where group1.title_id = group2.title_id " +
+                                        "and group1.nmconst <> group2.nmconst) as pairchemistry group by primaryname1," +
+                                        " primaryname2 order by chemistry desc limit 10;"
                         );
 
-                        System.out.println(sqlStatement);
                         //send statement to DBMS
                         ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -114,17 +118,15 @@ public class Trending extends JFrame {
 
 
                         while (result.next()) {
-                            System.out.println("HERE 1");
 
-                           String hollywoodPairs =  result.getString("hollywood_pairs");
-
-
-                            Object[] information = {hollywoodPairs};
-                            System.out.println(information[0]);
+                            String name1 = result.getString("primaryname1");
+                            String name2 = result.getString("primaryname2");
+                            String chem = result.getString("chemistry");
+                            Object[] information = {name1, name2};
                             model.addRow(information);
                         }
-                        System.out.println("HERE 2");
 
+                        //}
                     } catch (Exception x) {
                         System.out.println("Error accessing Database.");
                     }
@@ -161,7 +163,6 @@ public class Trending extends JFrame {
                                 "SELECT customer_id FROM customer_ratings WHERE title_id = '" + tomatoTitle1 + "' AND rating > 3;"
                         );
 
-                        System.out.println(sqlStatement);
                         //send statement to DBMS
                         ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -183,7 +184,6 @@ public class Trending extends JFrame {
                                 "SELECT customer_id FROM customer_ratings WHERE title_id = '" + tomatoTitle2 + "' AND rating > 3;"
                         );
 
-                        System.out.println(sqlStatement2);
                         //send statement to DBMS
                         ResultSet result2 = stmt.executeQuery(sqlStatement2);
 
@@ -264,13 +264,121 @@ public class Trending extends JFrame {
                             }
                         }
 
-
-                        System.out.println("REACHED END");
-
-
                     } catch (Exception f){
                         System.out.println("Error accessing Database.");
                     }
+
+                } else if (s.equals("Date")) {
+
+                    startDate = JOptionPane.showInputDialog("Please input the start date you would like to search from (eg. YYYY-MM-DD)");
+                    if(isValidDate(startDate))
+                    {
+                        endDate = JOptionPane.showInputDialog("Please input the end date you would like to search from (eg. YYYY-MM-DD)");
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Please enter valid start date",
+                                "Hey!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if(isValidDate(endDate) && (startDate.compareTo(endDate) < 0))
+                    {
+                        JOptionPane.showMessageDialog(null, "Dates inputted correctly!");
+
+                        model.setColumnCount(5);
+                        model.setRowCount(0);
+
+                        JTableHeader header = myTable.getTableHeader();
+                        TableColumnModel colMod = header.getColumnModel();
+
+                        TableColumn tabCol = colMod.getColumn(0);
+                        TableColumn tabCol2 = colMod.getColumn(1);
+                        TableColumn tabCol3 = colMod.getColumn(2);
+                        TableColumn tabCol4 = colMod.getColumn(3);
+                        TableColumn tabCol5 = colMod.getColumn(4);
+
+                        tabCol.setHeaderValue("Title");
+                        tabCol2.setHeaderValue("Year");
+                        tabCol3.setHeaderValue("Genre");
+                        tabCol4.setHeaderValue("Avg Review");
+                        tabCol5.setHeaderValue("Runtime");
+
+                        header.repaint();
+
+
+                        List<Object[]> list = new ArrayList<Object[]>();
+
+
+                        try {
+                            //Class.forName("org.postgresql.Driver");
+                            conn = DriverManager.getConnection(
+                                    "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315_914_5_db",
+                                    my.user, my.pswd);
+                        } catch (Exception f) {
+                            f.printStackTrace();
+                            System.err.println(f.getClass().getName()+": "+f.getMessage());
+                            System.exit(0);
+                        }//end try catch
+                        System.out.println("Opened database successfully");
+                        String cus_lname = "";
+                        //  String username = "";
+                        try{
+                            //create a statement object
+                            Statement stmt = conn.createStatement();
+                            //create an SQL statement
+                            String sqlStatement = (
+                                    "SELECT original_title, start_year, genres, average_rating, runtime_minutes " +
+                                            "FROM titles " +
+                                            "INNER JOIN customer_ratings " +
+                                            "ON titles.title_id = customer_ratings.title_id " +
+                                            "WHERE customer_ratings.date_posted " +
+                                            "BETWEEN '" + startDate + "' AND '" + endDate + "'" +
+                                            "GROUP BY titles.title_id " +
+                                            "ORDER BY count(*) DESC LIMIT 10;"
+                            );
+
+
+                            //send statement to DBMS
+                            ResultSet result = stmt.executeQuery(sqlStatement);
+
+
+
+                            //OUTPUT
+                            System.out.println("Database");
+                            System.out.println("______________________________________");
+
+                            while (result.next()) {
+
+
+
+                                String titleName = result.getString("original_title");
+                                String year = result.getString("start_year");
+                                String genre = result.getString("genres");
+                                String avgRev = result.getString("average_rating");
+                                String runtime = result.getString("runtime_minutes");
+
+                                Object[] information = {titleName, year, genre, avgRev, runtime};
+
+
+
+                                model.addRow(information);
+
+
+                            }
+
+                        } catch (Exception f){
+                            System.out.println("Error accessing Database.");
+                        }
+
+
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid end date",
+                                "Hey!", JOptionPane.ERROR_MESSAGE);
+                    }
+
+
+
 
                 }
 
@@ -283,6 +391,7 @@ public class Trending extends JFrame {
         comboBox1 = new JComboBox();
         comboBox1.addItem("Hollywood Pairs");
         comboBox1.addItem("Tomato Number");
+        comboBox1.addItem("Date");
 
         List<Object[]> list = new ArrayList<Object[]>();
 
@@ -317,7 +426,6 @@ public class Trending extends JFrame {
                             "ORDER BY count(*) DESC LIMIT 10;"
             );
 
-            System.out.println(sqlStatement);
             //send statement to DBMS
             ResultSet result = stmt.executeQuery(sqlStatement);
 

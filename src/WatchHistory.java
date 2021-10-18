@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 import java.text.*;
-import java.util.Date;
 
 public class WatchHistory extends JFrame {
     private JPanel watchHistoryPanel;
@@ -75,7 +73,7 @@ public class WatchHistory extends JFrame {
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null, "Please enter valid star date",
+                        JOptionPane.showMessageDialog(null, "Please enter valid start date",
                                 "Hey!", JOptionPane.ERROR_MESSAGE);
                     }
                     if(isValidDate(endDate) && (startDate.compareTo(endDate) < 0))
@@ -119,7 +117,6 @@ public class WatchHistory extends JFrame {
                                             "BETWEEN '" + startDate + "' AND '" + endDate + "';"
                             );
 
-                            System.out.println(sqlStatement);
                             //send statement to DBMS
                             ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -199,8 +196,6 @@ public class WatchHistory extends JFrame {
                                     "ON titles.title_id = customer_ratings.title_id " +
                                     "AND customer_ratings.customer_id = '" + Login.userInfoInt + "';"
                         );
-
-                        System.out.println(sqlStatement);
                         //send statement to DBMS
                         ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -210,23 +205,15 @@ public class WatchHistory extends JFrame {
 
                         while (result.next()) {
 
-                            System.out.println("GETTING HERE 1!");
-
                             String titleName = result.getString("original_title");
                             String year = result.getString("start_year");
                             String genre = result.getString("genres");
                             String avgRev = result.getString("average_rating");
                             String runtime = result.getString("runtime_minutes");
 
-                            System.out.println("GETTING HERE 2!");
-
                             String dateWatched = result.getString("date_posted");
 
-                            System.out.println("GETTING HERE 3!");
-
                             Object[] information = {titleName, year, genre, avgRev, runtime, dateWatched};
-
-                            System.out.println("GETTING HERE 4!");
 
                             list.add(information);
 

@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -98,7 +97,6 @@ public class Recommended extends JFrame {
                             "'1488844' ORDER BY customer_ratings.rating DESC LIMIT 30;"
             );
 
-            System.out.println(sqlStatement);
             //send statement to DBMS
             ResultSet result = stmt.executeQuery(sqlStatement);
 
@@ -134,7 +132,6 @@ public class Recommended extends JFrame {
 
         }
         // take list of genres and iterate through
-        System.out.println(list.get(0)[0]);
 
         // iterating through all of the genres
 
@@ -151,7 +148,6 @@ public class Recommended extends JFrame {
                                 "LIKE '%"+ list.get(m)[0] +"%'LIMIT 5;"
                 );
 
-                //System.out.println(sqlStatement1);
                 //send statement to DBMS
                 ResultSet result1 = stmt1.executeQuery(sqlStatement1);
 
@@ -185,7 +181,6 @@ public class Recommended extends JFrame {
 
         Object[][] data = list2.toArray(new Object[list.size()][5]);
 
-        System.out.println("Hello1");
         columnNames = new String[]{"Title", "Year", "Genre", "Avg Review", "Runtime"};
         model = new DefaultTableModel(data, columnNames);
 
