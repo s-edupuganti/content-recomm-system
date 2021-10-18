@@ -11,15 +11,6 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="7990c" class="javax.swing.JButton" binding="searchButton">
-        <constraints>
-          <grid row="0" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <label value="Search"/>
-          <text value="Search"/>
-        </properties>
-      </component>
       <component id="1790c" class="javax.swing.JButton" binding="nextButton">
         <constraints>
           <grid row="1" column="6" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>

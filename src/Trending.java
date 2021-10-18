@@ -5,19 +5,16 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Trending extends JFrame {
     private JPanel trendingPanel;
     private JLabel titleLabel;
     private JButton filterButton;
-    private JButton searchButton;
-    //private JTable trendingTable;
     private JButton backButton;
     private JScrollBar scrollBar1;
     private JTable myTable;
@@ -41,20 +38,13 @@ public class Trending extends JFrame {
 
             }
         });
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Search search = new Search();
-                search.setVisible(true);
-                Trending.this.dispose();
-            }
-        });
 
         comboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                columnNames = new String[]{"Most Chemistry Between:"};
                 String title = "";
+                String tomatoTitle1 = "";
+                String tomatoTitle2 = "";
 
                 dbSetup my = new dbSetup();
                 //Building the connection
@@ -128,15 +118,6 @@ public class Trending extends JFrame {
 
                            String hollywoodPairs =  result.getString("hollywood_pairs");
 
-//                           if (result.absolute(1)) {
-//                               System.out.println("ROW 1");
-//                           }
-//
-//                            if (result.absolute(2)) {
-//                                System.out.println("ROW 2");
-//                            }
-
-
 
                             Object[] information = {hollywoodPairs};
                             System.out.println(information[0]);
@@ -145,6 +126,149 @@ public class Trending extends JFrame {
                         System.out.println("HERE 2");
 
                     } catch (Exception x) {
+                        System.out.println("Error accessing Database.");
+                    }
+
+                } else if (s.equals("Tomato Number")) {
+
+                    tomatoTitle1 = JOptionPane.showInputDialog("Please input first content title:");
+
+                    tomatoTitle2 = JOptionPane.showInputDialog("Please input second content title:");
+
+                    ArrayList<String> customerSeen1 = new ArrayList<String>();
+                    ArrayList<String> customerSeen2 = new ArrayList<String>();
+
+
+                    try {
+                        //Class.forName("org.postgresql.Driver");
+                        conn = DriverManager.getConnection(
+                                "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315_914_5_db",
+                                my.user, my.pswd);
+                    } catch (Exception f) {
+                        f.printStackTrace();
+                        System.err.println(f.getClass().getName()+": "+f.getMessage());
+                        System.exit(0);
+                    }//end try catch
+                    System.out.println("Opened database successfully");
+                    String cus_lname = "";
+                    //  String username = "";
+                    try{
+                        //create a statement object
+                        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                        //create an SQL statement
+
+                        String sqlStatement = (
+                                "SELECT customer_id FROM customer_ratings WHERE title_id = '" + tomatoTitle1 + "' AND rating > 3;"
+                        );
+
+                        System.out.println(sqlStatement);
+                        //send statement to DBMS
+                        ResultSet result = stmt.executeQuery(sqlStatement);
+
+                        //OUTPUT
+                        System.out.println("Database");
+                        System.out.println("______________________________________");
+
+
+                        while (result.next()) {
+
+                            String customer = result.getString("customer_id");
+
+                            customerSeen1.add(customer);
+
+
+                        }
+
+                        String sqlStatement2 = (
+                                "SELECT customer_id FROM customer_ratings WHERE title_id = '" + tomatoTitle2 + "' AND rating > 3;"
+                        );
+
+                        System.out.println(sqlStatement2);
+                        //send statement to DBMS
+                        ResultSet result2 = stmt.executeQuery(sqlStatement2);
+
+                        //OUTPUT
+                        System.out.println("Database");
+                        System.out.println("______________________________________");
+
+
+                        while (result2.next()) {
+
+                            String customer = result2.getString("customer_id");
+
+                            customerSeen2.add(customer);
+                        }
+
+                        Map<String, ArrayList<String>> tomatoMap1 = new HashMap<>();
+                        Map<String, ArrayList<String>> tomatoMap2 = new HashMap<>();
+
+                        for (int i = 0; i < customerSeen1.size(); i++) {
+                            tomatoMap1.put(customerSeen1.get(i), new ArrayList<String>());
+
+                            String sqlStatement3 = (
+                                    "SELECT title_id FROM customer_ratings WHERE customer_id = '" + customerSeen1.get(i) + "' AND rating > 3;"
+
+                                    );
+
+                            ResultSet result3 = stmt.executeQuery(sqlStatement3);
+
+                            String currentCustomer = customerSeen1.get(i);
+
+                            while (result3.next()) {
+                                String contentSeen = result3.getString("title_id");
+
+                                tomatoMap1.get(currentCustomer).add(contentSeen);
+
+                            }
+
+
+                        }
+
+                        // END OF FOR LOOP
+
+                        for (int i = 0; i < customerSeen2.size(); i++) {
+                            tomatoMap2.put(customerSeen2.get(i), new ArrayList<String>());
+
+                            String sqlStatement3 = (
+                                    "SELECT title_id FROM customer_ratings WHERE customer_id = '" + customerSeen2.get(i) + "' AND rating > 3;"
+
+                            );
+
+                            ResultSet result3 = stmt.executeQuery(sqlStatement3);
+
+                            String currentCustomer = customerSeen2.get(i);
+
+
+                            while (result3.next()) {
+                                String contentSeen = result3.getString("title_id");
+
+                                tomatoMap2.get(currentCustomer).add(contentSeen);
+
+                            }
+
+
+                        }
+
+                        outerloop:
+                        for (Map.Entry<String, ArrayList<String>> entry1 : tomatoMap1.entrySet()) {
+                            for (int i = 0; i < entry1.getValue().size(); i++) {
+                                for (Map.Entry<String, ArrayList<String>> entry2 : tomatoMap2.entrySet()) {
+                                    for (int j = 0; j < entry2.getValue().size(); j++) {
+
+                                        if (entry1.getValue().get(i) == entry2.getValue().get(j)) {
+                                            System.out.println(tomatoTitle1 + "->" + entry1.getKey() + "->" + entry1.getValue().get(i) + "->" + entry2.getKey() + "->" + tomatoTitle2);
+                                            break outerloop;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
+                        System.out.println("REACHED END");
+
+
+                    } catch (Exception f){
                         System.out.println("Error accessing Database.");
                     }
 
@@ -158,10 +282,9 @@ public class Trending extends JFrame {
     private void createUIComponents() {
         comboBox1 = new JComboBox();
         comboBox1.addItem("Hollywood Pairs");
+        comboBox1.addItem("Tomato Number");
 
         List<Object[]> list = new ArrayList<Object[]>();
-//        Object[] information = {"", "", "", "", ""};
-
 
         dbSetup my = new dbSetup();
         //Building the connection
@@ -169,7 +292,6 @@ public class Trending extends JFrame {
 
 
         try {
-            //Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(
                     "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315_914_5_db",
                     my.user, my.pswd);
@@ -203,8 +325,6 @@ public class Trending extends JFrame {
             System.out.println("Database");
             System.out.println("______________________________________");
 
-//                        List<Object[]> list = new ArrayList<Object[]>();
-
             while (result.next()) {
 
                 String titleName = result.getString("original_title");
@@ -216,9 +336,6 @@ public class Trending extends JFrame {
                 Object[] information = {titleName, year, genre, avgRev, runtime};
 
                 list.add(information);
-//                ArrayList<Integer> = new ArrayList<Integer>();
-
-
 
             }
 
@@ -232,12 +349,6 @@ public class Trending extends JFrame {
 
         String[] columnNames = {"Title", "Year", "Genre", "Avg Review", "Runtime"};
 
-
-
-
-
-//        Object[][] data = new Object[2][1];
-//        data[0][0] = "Names";
         model = new DefaultTableModel(data, columnNames);
 
         myTable = new JTable(model);

@@ -16,18 +16,13 @@ public class WatchHistory extends JFrame {
     private JPanel watchHistoryPanel;
     private JLabel titleLabel;
     private JButton backButton;
-    private JButton searchButton;
     private JButton back_home;
-    //private JTable trendingTable;
     private JScrollBar scrollBar1;
-    //private JButton filterButton;
     private JScrollPane tableScrollPane;
     public JTable table1;
     public DefaultTableModel model;
     public String[] columnNames;
     private JComboBox comboBox1;
-
-//    private JButton loadButton;
 
     public static boolean isValidDate(String inDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -53,14 +48,7 @@ public class WatchHistory extends JFrame {
                 WatchHistory.this.dispose();
             }
         });
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Search search = new Search();
-                search.setVisible(true);
-                WatchHistory.this.dispose();
-            }
-        });
+
         back_home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,17 +57,6 @@ public class WatchHistory extends JFrame {
                 WatchHistory.this.dispose();
             }
         });
-
-      /*  filterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                JOptionPane.showMessageDialog(WatchHistory.this,
-                        "Filter Button Pressed!");
-
-
-            }
-        });*/
 
         comboBox1.addActionListener(new ActionListener() {
             @Override
@@ -91,7 +68,7 @@ public class WatchHistory extends JFrame {
 
                 if(s.equals("Date"))
                 {
-                    startDate = JOptionPane.showInputDialog("Please input the start date  you would like to search from (eg. YYYY-MM-DD)");
+                    startDate = JOptionPane.showInputDialog("Please input the start date you would like to search from (eg. YYYY-MM-DD)");
                     if(isValidDate(startDate))
                     {
                         endDate = JOptionPane.showInputDialog("Please input the end date you would like to search from (eg. YYYY-MM-DD)");
@@ -161,9 +138,6 @@ public class WatchHistory extends JFrame {
 
                                 Object[] information = {titleName, year, genre, avgRev, runtime, dateWatched};
 
-//                                list.add(information);
-//                                Object[][] data = list.toArray(new Object[list.size()][5]);
-
                                 model.addRow(information);
 
 
@@ -172,9 +146,6 @@ public class WatchHistory extends JFrame {
                         } catch (Exception f){
                             System.out.println("Error accessing Database.");
                         }
-
-
-//                        model = new DefaultTableModel(data, columnNames);
 
 
                     }
@@ -268,7 +239,6 @@ public class WatchHistory extends JFrame {
         Object[][] data = list.toArray(new Object[list.size()][5]);
 
 
-//        String[] columnNames = {"Title", "Year", "Genre", "Avg Review", "Runtime"};
         columnNames = new String[]{"Title", "Year", "Genre", "Avg Review", "Runtime", "Date Watched"};
         model = new DefaultTableModel(data, columnNames);
 
@@ -276,6 +246,5 @@ public class WatchHistory extends JFrame {
         table1.setFillsViewportHeight(true);
         table1.setEnabled(false);
 
-        // TODO: place custom component creation code here
     }
 }

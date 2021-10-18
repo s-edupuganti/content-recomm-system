@@ -15,7 +15,6 @@ public class Recommended extends JFrame {
     private JPanel recommendedPanel;
     private JLabel titleLabel;
     private JButton nextButton;
-    private JButton searchButton;
     private JButton backButton;
     private JButton back_home;
     private JTable table1;
@@ -26,12 +25,11 @@ public class Recommended extends JFrame {
 
     public Recommended() {
         super();
-//        this.conn = conn;
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(recommendedPanel);
         this.pack();
-        //this.setVisible(false);
+
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -48,14 +46,7 @@ public class Recommended extends JFrame {
                 Recommended.this.dispose();
             }
         });
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Search search = new Search();
-                search.setVisible(true);
-                Recommended.this.dispose();
-            }
-        });
+
         back_home.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,7 +77,6 @@ public class Recommended extends JFrame {
 
 
         try {
-            //Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(
                     "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315_914_5_db",
                     my.user, my.pswd);
@@ -97,7 +87,6 @@ public class Recommended extends JFrame {
         }//end try catch
         System.out.println("Opened database successfully");
         String cus_lname = "";
-        //  String username = "";
         try{
             //create a statement object
             Statement stmt = conn.createStatement();
@@ -119,21 +108,8 @@ public class Recommended extends JFrame {
 
             while (result.next()) {
 
-                //System.out.println("GETTING HERE 1!");
-
-                //String titleName = result.getString("original_title");
-                //String year = result.getString("start_year");
                 String genre = result.getString("genres");
-                //String avgRev = result.getString("average_rating");
-                //String runtime = result.getString("runtime_minutes");
 
-                //System.out.println("GETTING HERE 2!");
-
-                //String dateWatched = result.getString("date_posted");
-
-                //System.out.println("GETTING HERE 3!");
-
-                //Object[] information = {titleName, year, genre, avgRev, runtime, dateWatched};
                 Object[] information = new Object[1];
 
                 if (genre.contains(",")) {
@@ -141,20 +117,14 @@ public class Recommended extends JFrame {
                     for (int i = 0; i < parts.length; i++ ) {
                         information[0] = parts[i];
                         list.add(information);
-                        //System.out.println(information[0]);
+
                     }
                 }
                 else { // no comma
                     information[0] = genre;
                     list.add(information);
-                    //System.out.println(information[0]);
                 }
 
-
-
-                //System.out.println("GETTING HERE 4!");
-
-                //list.add(information);
 
             }
             stmt.close();
@@ -170,10 +140,6 @@ public class Recommended extends JFrame {
 
         for (int m = 0; m < list.size(); m++) {
 
-
-            //System.out.println("Opened database successfully");
-            //String cus_lname1 = "";
-            //  String username = "";
             try{
                 //create a statement object
                 Statement stmt1 = conn.createStatement();
@@ -190,12 +156,10 @@ public class Recommended extends JFrame {
                 ResultSet result1 = stmt1.executeQuery(sqlStatement1);
 
                 //OUTPUT
-                //System.out.println("Database");
-                //System.out.println("______________________________________");
+
 
                 while (result1.next()) {
 
-                    //System.out.println("GETTING HERE 1!");
 
                     String titleName = result1.getString("original_title");
                     String year = result1.getString("start_year");
@@ -203,15 +167,10 @@ public class Recommended extends JFrame {
                     String avgRev = result1.getString("average_rating");
                     String runtime = result1.getString("runtime_minutes");
 
-                    //System.out.println("GETTING HERE 2!");
 
-                    //String dateWatched = result1.getString("date_posted");
-
-                    //System.out.println("GETTING HERE 3!");
 
                     Object[] information = {titleName, year, genre, avgRev, runtime};
 
-                    //System.out.println("GETTING HERE 4!");
 
                     list2.add(information);
 

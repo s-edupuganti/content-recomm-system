@@ -1,11 +1,9 @@
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.*;
-//import org.apache.commons.lang3.math.NumberUtils;
 
 
 public class Login extends JFrame {
@@ -40,8 +38,7 @@ public class Login extends JFrame {
                 Login.this.dispose();
             }
         });
-        //Recommended rec = new Recommended();
-        //rec.setVisible(true);
+
         goButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent a) {
@@ -90,15 +87,8 @@ public class Login extends JFrame {
                                     "ERROR: Incorrect User Login Info");
                         } else {
 
-//                            System.out.println(result.getString("customer_id"));
-//
-//                            Recommended rec = new Recommended();
-//                            rec.setVisible(true);
-//                            Login.this.dispose();
 
                         }
-
-
 
 
                         while (result.next()) {
@@ -115,21 +105,12 @@ public class Login extends JFrame {
                         System.out.println("Error accessing Database.");
                     }
 
-
-//                    Recommended rec = new Recommended();
-//                    rec.setVisible(true);
-//                    Login.this.dispose();
-
-
-
                 }
                 catch (NumberFormatException f) {
                     JOptionPane.showMessageDialog(Login.this,
                             "ERROR: Incorrect User Login Info");
 
                 }
-
-
 
             }
         });
@@ -139,22 +120,6 @@ public class Login extends JFrame {
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
                 userInfo = ((JTextField)e.getSource()).getText() + String.valueOf(e.getKeyChar());
-
-//                try{
-//                    Integer.parseInt(userInfo);
-//                    userInfoInt = Integer.parseInt(userInfo);
-//                }
-//                catch (NumberFormatException f) {
-//                    JOptionPane.showMessageDialog(Login.this,
-//                            "ERROR: Incorrect User Login Info");
-//
-//                }
-
-
-
-
-
-
 
             }
         });

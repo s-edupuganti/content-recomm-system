@@ -15,7 +15,6 @@ public class ViewerBeware extends JFrame {
     private JPanel viewerBewarePanel;
     public JTable vbTable;
     private JButton back_home;
-    private JButton searchButton;
     private JButton backButton;
     public String[] columnNames;
     public DefaultTableModel model;
@@ -124,16 +123,9 @@ public class ViewerBeware extends JFrame {
 
                 System.out.println("HELLO 4!");
 
-
             }
 
             System.out.println("HELLO 5!");
-
-
-
-
-
-
 
             String avoidUser = "";
             int greatDislikeSim = 0;
@@ -188,8 +180,6 @@ public class ViewerBeware extends JFrame {
                     avoidUser = list.get(i);
                     break;
                 }
-
-
 
 
             }
@@ -250,8 +240,6 @@ public class ViewerBeware extends JFrame {
 
         Object[][] data = finalOutput.toArray(new Object[list.size()][5]);
 
-
-//        String[] columnNames = {"Title", "Year", "Genre", "Avg Review", "Runtime"};
         columnNames = new String[]{"Title", "Year", "Genre", "Avg Review", "Runtime"};
         model = new DefaultTableModel(data, columnNames);
 

@@ -1,10 +1,6 @@
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
 public class Home extends JFrame {
 
@@ -20,20 +16,16 @@ public class Home extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(homePanel);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //this.setContentPane(new View().homePanel);
         this.pack();
         this.setVisible(true);
-        //contentViewerButton = new JButton("Content Viewer");
-        //contentViewerButton.addActionListener(this);
+
         contentViewerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Home frame = new Home("Home Frame");
-                //Recommended rec = new Recommended();
+
                 //rec.setVisible(true);
                 Login log = new Login();
                 log.setVisible(true);
-                //clicked = true;
                 Home.this.dispose();
 
             }
@@ -48,36 +40,11 @@ public class Home extends JFrame {
 
         });
     }
-/*
-    public void actionPerformed(ActionEvent e)
-    {
-        String command = e.getActionCommand();
 
-        if(command.equals("Content Viewer"))
-        {
-            Recommended rec = new Recommended();
-            rec.setVisible(true);
-            this.setVisible(false);
-        }
-    }
-
- */
 
     public static void main(String[] args) {
-        //JFrame frame = new JFrame();
-        //JPanel panel = new JPanel(homePanel);
 
-        // frame.setContentPane();
-        //frame.setVisible(true);
-        /*if(clicked == true)
-        {
-            frame.setVisible(false);
-        }
-
-         */
         Home frame = new Home("Home page");
-
-
 
     }
 

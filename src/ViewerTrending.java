@@ -12,27 +12,19 @@ import java.util.List;
 public class ViewerTrending extends JFrame {
     private JPanel vTrendingPanel;
     private JLabel titleLabel;
-    private JButton searchButton;
-    //private JTable trendingTable;
     private JButton nextButton;
     private JButton backButton;
     private JButton back_home;
     private JScrollBar scrollBar1;
     private JTable myTable;
 
-    //private Object[] columnNames = new Object[0];
     private Object[][] output = new Object[5][5];
-//    public ArrayList<String> columnNames = new ArrayList<String>();
-    //private ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-//    public ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 
     public ViewerTrending() {
         super();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setContentPane(vTrendingPanel);
         this.pack();
-
-        // use this.validate() and this.repaint() to refresh the table or database after a command
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -42,14 +34,7 @@ public class ViewerTrending extends JFrame {
                 ViewerTrending.this.dispose();
             }
         });
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Search search = new Search();
-                search.setVisible(true);
-                ViewerTrending.this.dispose();
-            }
-        });
+
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -115,8 +100,6 @@ public class ViewerTrending extends JFrame {
             System.out.println("Database");
             System.out.println("______________________________________");
 
-//                        List<Object[]> list = new ArrayList<Object[]>();
-
             while (result.next()) {
 
                 String titleName = result.getString("original_title");
@@ -128,7 +111,6 @@ public class ViewerTrending extends JFrame {
                 Object[] information = {titleName, year, genre, avgRev, runtime};
 
                 list.add(information);
-//                ArrayList<Integer> = new ArrayList<Integer>();
 
 
 
@@ -138,23 +120,11 @@ public class ViewerTrending extends JFrame {
             System.out.println("Error accessing Database.");
         }
 
-
-//                    Recommended rec = new Recommended();
-//                    rec.setVisible(true);
-//                    Login.this.dispose();
-
-
-
-//        Object[] information = {"A Bridge Too Far", "1977", "Drama,History,War", "7.4", "175"};
-//        List<Object[]> list = new ArrayList<Object[]>();
-//        list.add(information);
-
         Object[][] data = list.toArray(new Object[list.size()][5]);
 
 
 
         String[] columnNames = {"Title", "Year", "Genre", "Avg Review", "Runtime"};
-//        Object[][] data = {{"A Bridge Too Far", "1977", "Drama,History,War", "7.4", "175"}, {"A Christmas Carol", "2019", "Drama,Fantasy,Music", "5.8", "75"}};
         myTable = new JTable(data, columnNames);
         myTable.setFillsViewportHeight(true);
         myTable.setEnabled(false);
