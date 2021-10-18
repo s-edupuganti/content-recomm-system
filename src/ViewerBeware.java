@@ -54,7 +54,6 @@ public class ViewerBeware extends JFrame {
         Connection conn = null;
 
         try {
-            //Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(
                     "jdbc:postgresql://csce-315-db.engr.tamu.edu/csce315_914_5_db",
                     my.user, my.pswd);
@@ -116,7 +115,7 @@ public class ViewerBeware extends JFrame {
             for (int i = 0; i < list.size(); i++) {
 
 
-                if (i == 0) {
+                if (i == 0) { // Change threshold if iterations become more longer
                     countDbl = (int) Math.floor(count / 1.5);
                 } else if (i == 20) {
                     countDbl = (int) Math.floor(count / 2);
@@ -149,7 +148,7 @@ public class ViewerBeware extends JFrame {
 
                     }
 
-                if (dislikesCommonInt >= countDbl) {
+                if (dislikesCommonInt >= countDbl) { // Check if dislikes common is greater than threshold
                     greatDislikeSim = dislikesCommonInt;
                     avoidUser = list.get(i);
                     break;

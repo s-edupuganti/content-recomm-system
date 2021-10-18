@@ -66,7 +66,7 @@ public class Recommended extends JFrame {
     }
 
     private void createUIComponents() {
-        List<Object[]> list = new ArrayList<Object[]>();
+        List<Object[]> list = new ArrayList<Object[]>(); // Lists used to append Object from query
         List<Object[]> list2 = new ArrayList<Object[]>();
 
         dbSetup my = new dbSetup();
@@ -90,11 +90,11 @@ public class Recommended extends JFrame {
             //create a statement object
             Statement stmt = conn.createStatement();
             //create an SQL statement
-            String sqlStatement = (
+            String sqlStatement = ( // Find top 30 from users watch history
                     "SELECT genres FROM titles INNER JOIN " +
                             "customer_ratings ON titles.title_id = " +
                             "customer_ratings.title_id AND customer_ratings.customer_id = " +
-                            "'1488844' ORDER BY customer_ratings.rating DESC LIMIT 30;"
+                            "'" + Login.userInfoInt + "' ORDER BY customer_ratings.rating DESC LIMIT 30;"
             );
 
             //send statement to DBMS
@@ -110,7 +110,7 @@ public class Recommended extends JFrame {
 
                 Object[] information = new Object[1];
 
-                if (genre.contains(",")) {
+                if (genre.contains(",")) { // Split genres if there are multiple
                     String[] parts = genre.split(",");
                     for (int i = 0; i < parts.length; i++ ) {
                         information[0] = parts[i];
@@ -141,7 +141,7 @@ public class Recommended extends JFrame {
                 //create a statement object
                 Statement stmt1 = conn.createStatement();
                 //create an SQL statement
-                String sqlStatement1 = (
+                String sqlStatement1 = ( // Reccomendation query
                         "SELECT DISTINCT original_title, start_year, genres, average_rating," +
                                 " runtime_minutes FROM titles INNER JOIN customer_ratings ON " +
                                 "titles.title_id = customer_ratings.title_id AND titles.genres " +
@@ -154,7 +154,7 @@ public class Recommended extends JFrame {
                 //OUTPUT
 
 
-                while (result1.next()) {
+                while (result1.next()) { // Query output
 
 
                     String titleName = result1.getString("original_title");
@@ -182,7 +182,7 @@ public class Recommended extends JFrame {
         Object[][] data = list2.toArray(new Object[list.size()][5]);
 
         columnNames = new String[]{"Title", "Year", "Genre", "Avg Review", "Runtime"};
-        model = new DefaultTableModel(data, columnNames);
+        model = new DefaultTableModel(data, columnNames); // model initalization
 
         table1 = new JTable(model);
         table1.setFillsViewportHeight(true);

@@ -23,7 +23,7 @@ public class Trending extends JFrame {
     public DefaultTableModel model;
     public String[] columnNames;
 
-    public static boolean isValidDate(String inDate) {
+    public static boolean isValidDate(String inDate) { // Helper function to check if date is valid
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
         try {
@@ -64,7 +64,7 @@ public class Trending extends JFrame {
                 Connection conn = null;
                 String s = (String) comboBox1.getSelectedItem();
                 if (s.equals("Hollywood Pairs")) {
-                    model.setColumnCount(2);
+                    model.setColumnCount(2); // One column for each actor hence (pairs)
                     model.setRowCount(0);
                     JTableHeader header = myTable.getTableHeader();
                     TableColumnModel colMod = header.getColumnModel();
@@ -94,7 +94,7 @@ public class Trending extends JFrame {
                         Statement stmt = conn.createStatement();
 //
                         //create an SQL statement
-                        String sqlStatement = (
+                        String sqlStatement = ( // Query to find chemistry between pairs
                                 "SELECT primaryname1, primaryname2, avg(average_rating) as chemistry " +
                                         "FROM (SELECT group1.nmconst as name1, group2.nmconst as name2, " +
                                         "group1.title_id, titles.average_rating, group1.primary_name as primaryname1," +
@@ -133,7 +133,7 @@ public class Trending extends JFrame {
 
                 } else if (s.equals("Tomato Number")) {
 
-                    tomatoTitle1 = JOptionPane.showInputDialog("Please input first content title:");
+                    tomatoTitle1 = JOptionPane.showInputDialog("Please input first content title:"); // Ask inputs from user
 
                     tomatoTitle2 = JOptionPane.showInputDialog("Please input second content title:");
 
@@ -199,7 +199,7 @@ public class Trending extends JFrame {
                             customerSeen2.add(customer);
                         }
 
-                        Map<String, ArrayList<String>> tomatoMap1 = new HashMap<>();
+                        Map<String, ArrayList<String>> tomatoMap1 = new HashMap<>(); // Hash map for each user, and all content they have seen
                         Map<String, ArrayList<String>> tomatoMap2 = new HashMap<>();
 
                         for (int i = 0; i < customerSeen1.size(); i++) {
@@ -277,14 +277,14 @@ public class Trending extends JFrame {
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null, "Please enter valid start date",
+                        JOptionPane.showMessageDialog(null, "Please enter valid start date", // error handling
                                 "Hey!", JOptionPane.ERROR_MESSAGE);
                     }
                     if(isValidDate(endDate) && (startDate.compareTo(endDate) < 0))
                     {
                         JOptionPane.showMessageDialog(null, "Dates inputted correctly!");
 
-                        model.setColumnCount(5);
+                        model.setColumnCount(5); // set column count back to normal if changed prior to selecting dates
                         model.setRowCount(0);
 
                         JTableHeader header = myTable.getTableHeader();
@@ -325,7 +325,7 @@ public class Trending extends JFrame {
                             //create a statement object
                             Statement stmt = conn.createStatement();
                             //create an SQL statement
-                            String sqlStatement = (
+                            String sqlStatement = ( // query to find trending between inputted dates
                                     "SELECT original_title, start_year, genres, average_rating, runtime_minutes " +
                                             "FROM titles " +
                                             "INNER JOIN customer_ratings " +
@@ -376,9 +376,6 @@ public class Trending extends JFrame {
                         JOptionPane.showMessageDialog(null, "Please enter a valid end date",
                                 "Hey!", JOptionPane.ERROR_MESSAGE);
                     }
-
-
-
 
                 }
 

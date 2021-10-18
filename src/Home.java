@@ -19,6 +19,8 @@ public class Home extends JFrame {
         this.pack();
         this.setVisible(true);
 
+        // Choose between contentViewer or contentAnalyst
+
         contentViewerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -45,7 +45,7 @@ public class Login extends JFrame {
 
 
                 try{
-                    Integer.parseInt(userInfo);
+                    Integer.parseInt(userInfo); // Convert string input to int
                     userInfoInt = Integer.parseInt(userInfo);
 
 
@@ -80,7 +80,7 @@ public class Login extends JFrame {
                         System.out.println("______________________________________");
 
                         if (!result.isBeforeFirst()) {
-                            JOptionPane.showMessageDialog(Login.this,
+                            JOptionPane.showMessageDialog(Login.this, // if input is incorrect
                                     "ERROR: Incorrect User Login Info");
                         } else {
 
@@ -88,7 +88,7 @@ public class Login extends JFrame {
                         }
 
 
-                        while (result.next()) {
+                        while (result.next()) { // checks if login is within database
 
                             System.out.println(result.getString("customer_id"));
 
@@ -116,7 +116,7 @@ public class Login extends JFrame {
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
-                userInfo = ((JTextField)e.getSource()).getText() + String.valueOf(e.getKeyChar());
+                userInfo = ((JTextField)e.getSource()).getText() + String.valueOf(e.getKeyChar()); // input
 
             }
         });

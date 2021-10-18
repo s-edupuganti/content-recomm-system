@@ -22,7 +22,7 @@ public class WatchHistory extends JFrame {
     public String[] columnNames;
     private JComboBox comboBox1;
 
-    public static boolean isValidDate(String inDate) {
+    public static boolean isValidDate(String inDate) { // Helper function to check if date is valid
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
         try {
@@ -107,7 +107,7 @@ public class WatchHistory extends JFrame {
                             //create a statement object
                             Statement stmt = conn.createStatement();
                             //create an SQL statement
-                            String sqlStatement = (
+                            String sqlStatement = ( // Query to select watch history between specific dates
                                     "SELECT original_title, start_year, genres, average_rating, runtime_minutes, customer_ratings.date_posted " +
                                             "FROM titles " +
                                             "INNER JOIN customer_ratings " +
@@ -124,7 +124,7 @@ public class WatchHistory extends JFrame {
                             System.out.println("Database");
                             System.out.println("______________________________________");
 
-                            while (result.next()) {
+                            while (result.next()) { // included date watched so user can see when they saw content
 
                                 String titleName = result.getString("original_title");
                                 String year = result.getString("start_year");
@@ -170,6 +170,8 @@ public class WatchHistory extends JFrame {
                     dbSetup my = new dbSetup();
                     //Building the connection
                     Connection conn = null;
+
+                    //Initalize when window loads
 
 
                     try {
@@ -227,7 +229,7 @@ public class WatchHistory extends JFrame {
 
 
         columnNames = new String[]{"Title", "Year", "Genre", "Avg Review", "Runtime", "Date Watched"};
-        model = new DefaultTableModel(data, columnNames);
+        model = new DefaultTableModel(data, columnNames); // Construct table
 
         table1 = new JTable(model);
         table1.setFillsViewportHeight(true);

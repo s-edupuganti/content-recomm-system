@@ -82,7 +82,7 @@ public class ViewerTrending extends JFrame {
             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             //create an SQL statement
 
-            String sqlStatement = (
+            String sqlStatement = ( // query for top 10 trending of everything within database
                     "SELECT original_title, start_year, genres, average_rating, runtime_minutes " +
                             "FROM titles " +
                             "INNER JOIN customer_ratings " +
